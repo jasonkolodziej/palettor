@@ -60,6 +60,17 @@ func FromColor(c color.Color) HexadecimalColor {
 	return FromRGBa(red, green, blue, float64(alpha/255))
 }
 
+func (c HexadecimalColor) ToRGBA() color.Color {
+	x := c.ToRGBa()
+	r, g, b, a := x()
+	return &color.RGBA{
+		R: r,
+		G: g,
+		B: b,
+		A: uint8(a),
+	}
+}
+
 func ColorToHex(c color.Color) string {
 	switch c.(type) {
 	case color.YCbCr:
