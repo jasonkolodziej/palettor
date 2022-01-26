@@ -1,4 +1,4 @@
-module github.com/mccutchen/palettor
+module github.com/jasonkolodziej/palettor
 
 go 1.12
 
