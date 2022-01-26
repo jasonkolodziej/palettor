@@ -14,7 +14,7 @@ import (
 	"math"
 	"os"
 
-	"github.com/mccutchen/palettor"
+	"github.com/jasonkolodziej/palettor"
 	"github.com/nfnt/resize"
 	"github.com/pkg/profile"
 )
