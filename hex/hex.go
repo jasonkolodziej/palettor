@@ -2,6 +2,7 @@ package hex
 
 import (
 	"fmt"
+	"image/color"
 	"math"
 	"strconv"
 	"strings"
@@ -24,6 +25,10 @@ func AlphaFromPercent(percent float64) float64 {
 	return percent / 100
 }
 
+func AlphaFromByte(a byte) float64 {
+	return float64(a) / 255
+}
+
 func FromRGBa(r, g, b byte, a float64) HexadecimalColor {
 	if a < 0 || a > 1 {
 		panic(fmt.Errorf("RGB's alpha must be between a < 0 || a > 1, a=%f", a))
@@ -33,6 +38,38 @@ func FromRGBa(r, g, b byte, a float64) HexadecimalColor {
 
 func (c HexadecimalColor) String() string {
 	return fmt.Sprintf("%08x", uint32(c))
+}
+
+func FromColor(c color.Color) HexadecimalColor {
+	var red, green, blue, alpha uint8
+	switch c.(type) {
+	case color.YCbCr:
+		x := c.(color.YCbCr)
+		red, green, blue = color.YCbCrToRGB(x.Y, x.Cb, x.Cr)
+		alpha = 255
+		break
+	default:
+		x := c.(color.RGBA)
+		red = x.R
+		green = x.G
+		blue = x.B
+		alpha = x.A
+		break
+	}
+	fmt.Printf("red: %d; blue: %d; green: %d; alpha: %d\n", red, green, blue, alpha)
+	return FromRGBa(red, green, blue, float64(alpha/255))
+}
+
+func ColorToHex(c color.Color) string {
+	switch c.(type) {
+	case color.YCbCr:
+		x := c.(color.YCbCr)
+		return fmt.Sprintf("%02x%02x%02x%02x", x.Y, x.Cb, x.Cr, uint8(255))
+	default:
+		x := c.(color.RGBA)
+		return fmt.Sprintf("%02x%02x%02x%02x", x.R, x.G, x.B, x.A)
+	}
+	panic("conversion failed")
 }
 
 func FromRGBaColor(color RGBaColor) HexadecimalColor {
